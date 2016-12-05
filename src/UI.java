@@ -379,7 +379,7 @@ public class UI extends javax.swing.JFrame {
         int returnValue = fileChooser.showOpenDialog(null);
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
-            System.out.println(selectedFile.getName());
+//            System.out.println(selectedFile.getName());
             filename = selectedFile.getName();
         }
         String line, input = "";
@@ -464,9 +464,7 @@ public class UI extends javax.swing.JFrame {
 
     private void initialize() {
 
-        if (!nuc_rbut.isSelected() && !prot_rbut.isSelected()) {
-            submit_but.disable();
-        }
+        submit_but.disable();
         points = new ArrayList<Point>();
 
     }
@@ -571,37 +569,37 @@ public class UI extends javax.swing.JFrame {
                 if (leftValue > topValue) {
                     if (leftValue > diagValue) {
                         tmp = leftValue;
-                        cur.addOrigin(getPoint(i, j - 1));
+                        cur.addOrigin(getPoint(i, j - 1), "left");
                     } else if (leftValue == diagValue) {
-                        cur.addOrigin(getPoint(i, j - 1));
-                        cur.addOrigin(getPoint(i - 1, j - 1));
+                        cur.addOrigin(getPoint(i, j - 1), "left");
+                        cur.addOrigin(getPoint(i - 1, j - 1), "diag");
                         tmp = leftValue;
                     } else {
-                        cur.addOrigin(getPoint(i - 1, j - 1));
+                        cur.addOrigin(getPoint(i - 1, j - 1), "diag");
                         tmp = diagValue;
                     }
                 } else if (topValue > leftValue) {
                     if (topValue > diagValue) {
                         tmp = topValue;
-                        cur.addOrigin(getPoint(i - 1, j));
+                        cur.addOrigin(getPoint(i - 1, j), "top");
                     } else if (topValue == diagValue) {
-                        cur.addOrigin(getPoint(i - 1, j));
-                        cur.addOrigin(getPoint(i - 1, j - 1));
+                        cur.addOrigin(getPoint(i - 1, j), "top");
+                        cur.addOrigin(getPoint(i - 1, j - 1), "diag");
                         tmp = topValue;
                     } else {
-                        cur.addOrigin(getPoint(i - 1, j - 1));
+                        cur.addOrigin(getPoint(i - 1, j - 1), "diag");
                         tmp = diagValue;
                     }
                 } else if (diagValue > topValue) {
                     if (diagValue > leftValue) {
                         tmp = diagValue;
-                        cur.addOrigin(getPoint(i - 1, j - 1));
+                        cur.addOrigin(getPoint(i - 1, j - 1), "diag");
                     } else if (diagValue == leftValue) {
-                        cur.addOrigin(getPoint(i - 1, j - 1));
-                        cur.addOrigin(getPoint(i, j - 1));
+                        cur.addOrigin(getPoint(i - 1, j - 1), "diag");
+                        cur.addOrigin(getPoint(i, j - 1), "left");
                         tmp = diagValue;
                     } else {
-                        cur.addOrigin(getPoint(i, j - 1));
+                        cur.addOrigin(getPoint(i, j - 1), "left");
                         tmp = leftValue;
                     }
                 }
@@ -609,15 +607,6 @@ public class UI extends javax.swing.JFrame {
                 score[i][j] = tmp;
                 cur.setValue(tmp);
 
-                Matrix m = new Matrix(score);
-
-                m.print(4, 3);
-
-                System.out.println(cur.getValue() + " origins");
-                for (int k = 0; k < cur.getOrigins().size(); k++) {
-                    System.out.println(cur.getOrigins().get(k).getValue());
-                }
-                System.out.println("");
             }
         }
 
@@ -639,59 +628,126 @@ public class UI extends javax.swing.JFrame {
     private void tracing() throws IOException {
         ArrayList<Point> backtrack = new ArrayList<>();
         Point cur = getPoint(row.sequence.length(), col.sequence.length());
-        System.out.println(cur.x + " " + cur.y);
-        int i = cur.x, j = cur.y;
+        int i = cur.getX(), j = cur.getY();
+        boolean flag = false;
+        backtrack.add(cur);
 
-        System.out.println(getPoint(1, 1).getOrigins().get(0).getValue());
-        
-        while (i!=0&&j!=0) {
+        while (i != 0 && j != 0) {
             cur = getPoint(i, j);
             backtrack.add(cur);
 
             if (cur.getOrigins().size() == 1) {
-                System.out.println("only one");
-                i = cur.getOrigins().get(0).x;
-                j = cur.getOrigins().get(0).y;
+                i = cur.getOrigins().get(0).getX();
+                j = cur.getOrigins().get(0).getY();
             } else {
                 System.out.println("There are more than 1 possibility of the traceback.");
                 for (int k = 0; k < cur.getOrigins().size(); k++) {
                     Point t = cur.getOrigins().get(k);
-                    System.out.println(t.x + ", " + t.y);
+                    System.out.println(t.getX() + ", " + t.getY());
                 }
                 System.out.print("Enter cell[i]: ");
                 Scanner scan = new Scanner(System.in);
                 i = scan.nextInt();
                 System.out.print("Enter cell[j]: ");
                 j = scan.nextInt();
-
             }
             if (i == 0 && j == 0) {
                 backtrack.add(getPoint(0, 0));
+                flag = true;
+            }
+            if (flag) {
                 break;
             }
         }
 
-        for (int k = 0; k < backtrack.size(); k++) {
-            System.out.print(backtrack.get(k).getValue() + "--");
-        }
-
         extractFile(backtrack);
-
     }
 
     private void extractFile(ArrayList<Point> backtrack) throws IOException {
-        JFrame frame = null;
+        String seq1 = "", seq2 = "", sim = "";
+        int score = 0, dif = 0;
+        int j = 1, k = 0;
+        int s = backtrack.size() - 1;
+
+        for (int i = 1; i < col.sequence.length();) {
+            if (s > 0) {
+                if (backtrack.get(s).getX() == backtrack.get(s - 1).getX() && backtrack.get(s).getY() == backtrack.get(s - 1).getY() - 1) {
+                    seq2 += "-";
+                    seq1 += col.sequence.charAt(i);
+                    i++;
+                } else if (backtrack.get(s).getX() == backtrack.get(s - 1).getX() - 1 && backtrack.get(s).getY() == backtrack.get(s - 1).getY()) {
+                    seq1 += "-";
+                    seq2 += row.sequence.charAt(j);
+                    j++;
+                } else {
+                    seq2 += row.sequence.charAt(j);
+                    j++;
+                    seq1 += col.sequence.charAt(i);
+                    i++;
+
+                }
+            }
+
+            s--;
+        }
+
+        for (int i = 1; i < seq1.length(); i++) {
+            if (seq2.charAt(j) == seq1.charAt(i)) {
+                System.out.println(Integer.parseInt(match_tf.getText()));
+            } else if (seq2.charAt(j) == '-') {
+//                System.out.println(Integer.parseInt(gap_tf.getText()));
+            } else {
+//                System.out.println(Integer.parseInt(mismatch_tf.getText()));
+            }
+
+        }
+
         int res = JOptionPane.showConfirmDialog(null, "Generate Report?", "Pop-Up Menu", JOptionPane.YES_NO_OPTION);
         if (res == JOptionPane.YES_OPTION) {
-           PrintWriter fw = new PrintWriter("output.txt", "UTF-8");
-           
+            PrintWriter fw = new PrintWriter("output.txt", "UTF-8");
+
             fw.write("Pairwise Sequence Alignment ver 'x' by Jessa Cabigas\n");
             fw.write("Rundate: ");
             Date dateobj = new Date();
             DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
             fw.write(df.format(dateobj));
-            fw.close();
 
+            fw.write("\n>" + row.title);
+            String[] thisCombo2 = row.sequence.split("(?<=\\G..........)");
+            for (int i = 0; i < thisCombo2.length; i++) {
+                fw.write("\n" + thisCombo2[i]);
+            }
+
+            fw.write("\n>" + col.title);
+            thisCombo2 = col.sequence.split("(?<=\\G..........)");
+            for (int i = 0; i < thisCombo2.length; i++) {
+                fw.write("\n" + thisCombo2[i]);
+            }
+
+            fw.write("\n Sequence 1 Length: " + row.sequence.length());
+            fw.write("\n Sequence 2 Length: " + col.sequence.length() + "\n");
+            fw.write(seq1 + "\n");
+
+            for (int l = 0; l < seq2.length(); l++) {
+                if (seq1.charAt(l) == '-' || seq2.charAt(l) == '-') {
+                    dif += Integer.parseInt(gap_tf.getText());
+                    System.out.println(Integer.parseInt(gap_tf.getText()));
+                } else if (seq1.charAt(l) == seq2.charAt(l)) {
+                    fw.write("|");
+                    score += Integer.parseInt(match_tf.getText());
+                    System.out.println(Integer.parseInt(match_tf.getText()));
+                } else {
+                    fw.write(" ");
+                    score += Integer.parseInt(mismatch_tf.getText());
+                    System.out.println(Integer.parseInt(mismatch_tf.getText()));
+                }
+            }
+
+            fw.write("\n" + seq2);
+
+            fw.write("\n SCORE : " + (score + dif));
+            fw.close();
+            System.exit(0);
         }
     }
 
@@ -719,19 +775,23 @@ class Sequence {
 
 class Point {
 
-    int x;
-    int y;
+    private int x;
+    private int y;
     private double value;
     private ArrayList<Point> origins = new ArrayList<Point>();
+    private String source;
 
     Point(int x, int y, double value) {
         this.x = x;
         this.y = y;
         this.value = value;
+
     }
 
-    public void addOrigin(Point origin) {
+    public void addOrigin(Point origin, String source) {
+        origin.setSource(source);
         getOrigins().add(origin);
+
     }
 
     /**
@@ -788,5 +848,19 @@ class Point {
      */
     public void setOrigins(ArrayList<Point> origins) {
         this.origins = origins;
+    }
+
+    /**
+     * @return the source
+     */
+    public String getSource() {
+        return source;
+    }
+
+    /**
+     * @param source the source to set
+     */
+    public void setSource(String source) {
+        this.source = source;
     }
 }
