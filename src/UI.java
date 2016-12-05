@@ -4,10 +4,18 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /*
@@ -338,7 +346,11 @@ public class UI extends javax.swing.JFrame {
         }
 
         if (k == 2 && valid) {
-            preprocess(seq);
+            try {
+                preprocess(seq);
+            } catch (IOException ex) {
+                Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } else {
             JOptionPane.showMessageDialog(null, "Input invalid: Enter 2 valid sequences.");
         }
@@ -459,7 +471,7 @@ public class UI extends javax.swing.JFrame {
 
     }
 
-    private void preprocess(ArrayList<Sequence> seq) {
+    private void preprocess(ArrayList<Sequence> seq) throws IOException {
         Sequence seq1 = seq.get(0);
         Sequence seq2 = seq.get(1);
 
@@ -598,12 +610,10 @@ public class UI extends javax.swing.JFrame {
                 cur.setValue(tmp);
 
                 Matrix m = new Matrix(score);
-//                System.out.println(j + " " + i + ": " + a + " " + b);
-//                System.out.println(leftValue + " + " + diagValue + " + " + topValue + " = " + tmp);
 
                 m.print(4, 3);
 
-                System.out.println(cur.getValue()+ " origins");
+                System.out.println(cur.getValue() + " origins");
                 for (int k = 0; k < cur.getOrigins().size(); k++) {
                     System.out.println(cur.getOrigins().get(k).getValue());
                 }
@@ -626,17 +636,20 @@ public class UI extends javax.swing.JFrame {
         return score[i - 1][j];
     }
 
-    private void tracing() {
+    private void tracing() throws IOException {
         ArrayList<Point> backtrack = new ArrayList<>();
         Point cur = getPoint(row.sequence.length(), col.sequence.length());
         System.out.println(cur.x + " " + cur.y);
         int i = cur.x, j = cur.y;
+
+        System.out.println(getPoint(1, 1).getOrigins().get(0).getValue());
         
-        while (i != 0 && j != 0) {
+        while (i!=0&&j!=0) {
             cur = getPoint(i, j);
             backtrack.add(cur);
-            
+
             if (cur.getOrigins().size() == 1) {
+                System.out.println("only one");
                 i = cur.getOrigins().get(0).x;
                 j = cur.getOrigins().get(0).y;
             } else {
@@ -650,13 +663,35 @@ public class UI extends javax.swing.JFrame {
                 i = scan.nextInt();
                 System.out.print("Enter cell[j]: ");
                 j = scan.nextInt();
-                
+
             }
-           
+            if (i == 0 && j == 0) {
+                backtrack.add(getPoint(0, 0));
+                break;
+            }
         }
 
         for (int k = 0; k < backtrack.size(); k++) {
-            System.out.print(backtrack.get(k).getValue()+"-->");
+            System.out.print(backtrack.get(k).getValue() + "--");
+        }
+
+        extractFile(backtrack);
+
+    }
+
+    private void extractFile(ArrayList<Point> backtrack) throws IOException {
+        JFrame frame = null;
+        int res = JOptionPane.showConfirmDialog(null, "Generate Report?", "Pop-Up Menu", JOptionPane.YES_NO_OPTION);
+        if (res == JOptionPane.YES_OPTION) {
+           PrintWriter fw = new PrintWriter("output.txt", "UTF-8");
+           
+            fw.write("Pairwise Sequence Alignment ver 'x' by Jessa Cabigas\n");
+            fw.write("Rundate: ");
+            Date dateobj = new Date();
+            DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+            fw.write(df.format(dateobj));
+            fw.close();
+
         }
     }
 
