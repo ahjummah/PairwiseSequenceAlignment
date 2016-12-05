@@ -732,15 +732,15 @@ public class UI extends javax.swing.JFrame {
                 if (seq1.charAt(l) == '-' || seq2.charAt(l) == '-') {
                     fw.write(" ");
                     dif += Integer.parseInt(gap_tf.getText());
-                    System.out.println(Integer.parseInt(gap_tf.getText()));
+//                    System.out.println(Integer.parseInt(gap_tf.getText()));
                 } else if (seq1.charAt(l) == seq2.charAt(l)) {
                     fw.write("|");
                     score += Integer.parseInt(match_tf.getText());
-                    System.out.println(Integer.parseInt(match_tf.getText()));
+//                    System.out.println(Integer.parseInt(match_tf.getText()));
                 } else {
                     fw.write(" ");
                     score += Integer.parseInt(mismatch_tf.getText());
-                    System.out.println(Integer.parseInt(mismatch_tf.getText()));
+//                    System.out.println(Integer.parseInt(mismatch_tf.getText()));
                 }
             }
 
