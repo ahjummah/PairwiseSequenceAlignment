@@ -11,6 +11,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,6 +36,8 @@ public class UI extends javax.swing.JFrame {
      */
     ArrayList<Point> points;
 
+    private final Map<Character, double[]> scoringMatrix;
+
     Sequence row;
     Sequence col;
     int max;
@@ -42,6 +46,8 @@ public class UI extends javax.swing.JFrame {
     public UI() {
         initComponents();
         initialize();
+        scoringMatrix = new HashMap<>();
+        initScoringMatrixMap();
 
     }
 
@@ -347,7 +353,13 @@ public class UI extends javax.swing.JFrame {
 
         if (k == 2 && valid) {
             try {
-                preprocess(seq);
+                if (nuc_rbut.isSelected()) {
+                    preprocessNuc(seq);
+                } else if (prot_rbut.isSelected()) {
+                    preprocessProt(seq);
+                } else {
+                    JOptionPane.showMessageDialog(null, "No selected sequence type.");
+                }
             } catch (IOException ex) {
                 Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -469,7 +481,7 @@ public class UI extends javax.swing.JFrame {
 
     }
 
-    private void preprocess(ArrayList<Sequence> seq) throws IOException {
+    private void preprocessNuc(ArrayList<Sequence> seq) throws IOException {
         Sequence seq1 = seq.get(0);
         Sequence seq2 = seq.get(1);
 
@@ -569,37 +581,37 @@ public class UI extends javax.swing.JFrame {
                 if (leftValue > topValue) {
                     if (leftValue > diagValue) {
                         tmp = leftValue;
-                        cur.addOrigin(getPoint(i, j - 1), "left");
+                        cur.addOrigin(getPoint(i, j - 1));
                     } else if (leftValue == diagValue) {
-                        cur.addOrigin(getPoint(i, j - 1), "left");
-                        cur.addOrigin(getPoint(i - 1, j - 1), "diag");
+                        cur.addOrigin(getPoint(i, j - 1));
+                        cur.addOrigin(getPoint(i - 1, j - 1));
                         tmp = leftValue;
                     } else {
-                        cur.addOrigin(getPoint(i - 1, j - 1), "diag");
+                        cur.addOrigin(getPoint(i - 1, j - 1));
                         tmp = diagValue;
                     }
                 } else if (topValue > leftValue) {
                     if (topValue > diagValue) {
                         tmp = topValue;
-                        cur.addOrigin(getPoint(i - 1, j), "top");
+                        cur.addOrigin(getPoint(i - 1, j));
                     } else if (topValue == diagValue) {
-                        cur.addOrigin(getPoint(i - 1, j), "top");
-                        cur.addOrigin(getPoint(i - 1, j - 1), "diag");
+                        cur.addOrigin(getPoint(i - 1, j));
+                        cur.addOrigin(getPoint(i - 1, j - 1));
                         tmp = topValue;
                     } else {
-                        cur.addOrigin(getPoint(i - 1, j - 1), "diag");
+                        cur.addOrigin(getPoint(i - 1, j - 1));
                         tmp = diagValue;
                     }
                 } else if (diagValue > topValue) {
                     if (diagValue > leftValue) {
                         tmp = diagValue;
-                        cur.addOrigin(getPoint(i - 1, j - 1), "diag");
+                        cur.addOrigin(getPoint(i - 1, j - 1));
                     } else if (diagValue == leftValue) {
-                        cur.addOrigin(getPoint(i - 1, j - 1), "diag");
-                        cur.addOrigin(getPoint(i, j - 1), "left");
+                        cur.addOrigin(getPoint(i - 1, j - 1));
+                        cur.addOrigin(getPoint(i, j - 1));
                         tmp = diagValue;
                     } else {
-                        cur.addOrigin(getPoint(i, j - 1), "left");
+                        cur.addOrigin(getPoint(i, j - 1));
                         tmp = leftValue;
                     }
                 }
@@ -752,6 +764,37 @@ public class UI extends javax.swing.JFrame {
         }
     }
 
+    private void preprocessProt(ArrayList<Sequence> seq) {
+
+    }
+
+    private void initScoringMatrixMap() {
+        scoringMatrix.put('A', new double[]{3, -3, -1, 0, -3, -1, 0, 1, -3, -1, -3, -2, -2, -4, 1, 1, 1, -7, -4, 0, 0, -1, -1, -8});
+        scoringMatrix.put('R', new double[]{-3, 6, -1, -3, -4, 1, -3, -4, 1, -2, -4, 2, -1, -5, -1, -1, -2, 1, -5, -3, -2, -1, -2, -8});
+        scoringMatrix.put('N', new double[]{-1, -1, 4, 2, -5, 0, 1, 0, 2, -2, -4, 1, -3, -4, -2, 1, 0, -4, -2, -3, 3, 0, -1, -8});
+        scoringMatrix.put('D', new double[]{0, -3, 2, 5, -7, 1, 3, 0, 0, -3, -5, -1, -4, -7, -3, 0, -1, -8, -5, -3, 4, 3, -2, -8});
+        scoringMatrix.put('C', new double[]{-3, -4, -5, -7, 9, -7, -7, -4, -4, -3, -7, -7, -6, -6, -4, 0, -3, -8, -1, -3, -6, -7, -4, -8});
+        scoringMatrix.put('Q', new double[]{-1, 1, 0, 1, -7, 6, 2, -3, 3, -3, -2, 0, -1, -6, 0, -2, -2, -6, -5, -3, 0, 4, -1, -8});
+        scoringMatrix.put('E', new double[]{0, -3, 1, 3, -7, 2, 5, -1, -1, -3, -4, -1, -3, -7, -2, -1, -2, -8, -5, -3, 3, 4, -1, -8});
+        scoringMatrix.put('G', new double[]{1, -4, 0, 0, -4, -3, -1, 5, -4, -4, -5, -3, -4, -5, -2, 1, -1, -8, -6, -2, 0, -2, -2, -8});
+        scoringMatrix.put('H', new double[]{-3, 1, 2, 0, -4, 3, -1, -4, 7, -4, -3, -2, -4, -3, -1, -2, -3, -3, -1, -3, 1, 1, -2, -8});
+        scoringMatrix.put('I', new double[]{-1, -2, -2, -3, -3, -3, -3, -4, -4, 6, 1, -3, 1, 0, -3, -2, 0, -6, -2, 3, -3, -3, -1, -8});
+        scoringMatrix.put('L', new double[]{-3, -4, -4, -5, -7, -2, -4, -5, -3, 1, 5, -4, 3, 0, -3, -4, -3, -3, -2, 1, -4, -3, -2, -8});
+        scoringMatrix.put('K', new double[]{-2, 2, 1, -1, -7, 0, -1, -3, -2, -3, -4, 5, 0, -7, -2, -1, -1, -5, -5, -4, 0, -1, -2, -8});
+        scoringMatrix.put('M', new double[]{-2, -1, -3, -4, -6, -1, -3, -4, -4, 1, 3, 0, 8, -1, -3, -2, -1, -6, -4, 1, -4, -2, -2, -8});
+        scoringMatrix.put('F', new double[]{-4, -5, -4, -7, -6, -6, -7, -5, -3, 0, 0, -7, -1, 8, -5, -3, -4, -1, 4, -3, -5, -6, -3, -8});
+        scoringMatrix.put('P', new double[]{1, -1, -2, -3, -4, 0, -2, -2, -1, -3, -3, -2, -3, -5, 6, 1, -1, -7, -6, -2, -2, -1, -2, -8});
+        scoringMatrix.put('S', new double[]{1, - 1, 1, 0, 0, -2, -1, 1, -2, -2, -4, -1, -2, -3, 1, 3, 2, -2, -3, -2, 0, -1, -1, -8});
+        scoringMatrix.put('T', new double[]{1, -2, 0, -1, -3, -2, -2, -1, -3, 0, -3, -1, -1, -4, -1, 2, 4, -6, -3, 0, 0, -2, -1, -8});
+        scoringMatrix.put('W', new double[]{-7, 1, -4, -8, -8, -6, -8, -8, -3, -6, -3, -5, -6, -1, -7, -2, -6, 12, -2, -8, -6, -7, -5, -8});
+        scoringMatrix.put('Y', new double[]{-4, -5, -2, -5, -1, -5, -5, -6, -1, -2, -2, -5, -4, 4, -6, -3, -3, -2, 8, -3, -3, -5, -3, -8});
+        scoringMatrix.put('V', new double[]{0, -3, -3, -3, -3, -3, -3, -2, -3, 3, 1, -4, 1, -3, -2, -2, 0, -8, -3, 5, -3, -3, -1, -8});
+        scoringMatrix.put('B', new double[]{0, -2, 3, 4, -6, 0, 3, 0, 1, -3, -4, 0, -4, -5, -2, 0, 0, -6, -3, -3, 4, 2, -1, -8});
+        scoringMatrix.put('Z', new double[]{-1, -1, 0, 3, -7, 4, 4, -2, 1, -3, -3, -1, -2, -6, -1, -1, -2, -7, -5, -3, 2, 4, -1, -8});
+        scoringMatrix.put('X', new double[]{-1, -2, -1, -2, -4, -1, -1, -2, -2, -1, -2, -2, -2, -3, -2, -1, -1, -5, -3, -1, -1, -1, -2, -8});
+        scoringMatrix.put('-', new double[]{-8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, 1});
+    }
+
 }
 
 class Sequence {
@@ -780,7 +823,6 @@ class Point {
     private int y;
     private double value;
     private ArrayList<Point> origins = new ArrayList<Point>();
-    private String source;
 
     Point(int x, int y, double value) {
         this.x = x;
@@ -789,8 +831,7 @@ class Point {
 
     }
 
-    public void addOrigin(Point origin, String source) {
-        origin.setSource(source);
+    public void addOrigin(Point origin) {
         getOrigins().add(origin);
 
     }
@@ -851,17 +892,4 @@ class Point {
         this.origins = origins;
     }
 
-    /**
-     * @return the source
-     */
-    public String getSource() {
-        return source;
-    }
-
-    /**
-     * @param source the source to set
-     */
-    public void setSource(String source) {
-        this.source = source;
-    }
 }
