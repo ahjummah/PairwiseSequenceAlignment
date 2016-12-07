@@ -1,13 +1,12 @@
 Pairwise Sequence Alignment ver 'x' by Jessa Cabigas
-Rundate: 06/12/16 13:10:35
->Seq 2
--GGATCGA
->Seq 1
--GAATTCAGT
-TA
- Sequence 1 Length: 8
- Sequence 2 Length: 12
-GAATTCAGTTA
-| | || |  |
-GGA-TC-G--A
- SCORE : 11
+Rundate: 06/12/16 15:49:31
+> seq1
+-TGGTG
+>seq2
+-ATCGT
+ Sequence 1 Length: 6
+ Sequence 2 Length: 6
+ATCGT
+    |
+TGG-T
+ SCORE : -4

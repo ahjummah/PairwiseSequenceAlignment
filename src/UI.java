@@ -37,6 +37,7 @@ public class UI extends javax.swing.JFrame {
     ArrayList<Point> points;
 
     private final Map<Character, double[]> scoringMatrix;
+    private String Proteins;
 
     Sequence row;
     Sequence col;
@@ -47,6 +48,7 @@ public class UI extends javax.swing.JFrame {
         initComponents();
         initialize();
         scoringMatrix = new HashMap<>();
+        Proteins = "";
         initScoringMatrixMap();
 
     }
@@ -202,32 +204,34 @@ public class UI extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel4)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(mismatch_tf, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel3)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(match_tf, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel5)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(gap_tf, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(145, 145, 145)
-                                .addComponent(matrix_cbo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(nuc_rbut)
-                                .addGap(91, 91, 91)
-                                .addComponent(prot_rbut)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(reset_but, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(upload_but, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(submit_but, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(submit_but, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                        .addComponent(nuc_rbut)
+                                        .addGap(91, 91, 91)
+                                        .addComponent(prot_rbut))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addComponent(jLabel4)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(mismatch_tf, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                                .addComponent(jLabel3)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(match_tf, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addComponent(jLabel5)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(gap_tf, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addGap(118, 118, 118)
+                                        .addComponent(matrix_cbo, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(0, 0, Short.MAX_VALUE)))
                         .addGap(21, 21, 21))))
         );
         jPanel1Layout.setVerticalGroup(
@@ -265,20 +269,24 @@ public class UI extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
                             .addComponent(gap_tf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(10, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(14, 14, 14))
         );
 
         pack();
@@ -481,24 +489,7 @@ public class UI extends javax.swing.JFrame {
 
     }
 
-    private void preprocessNuc(ArrayList<Sequence> seq) throws IOException {
-        Sequence seq1 = seq.get(0);
-        Sequence seq2 = seq.get(1);
-
-        seq1.sequence = "-" + seq1.sequence;
-        seq2.sequence = "-" + seq2.sequence;
-
-        //longest sequence will be the row
-        if (seq1.sequence.length() > seq2.sequence.length()) {
-            col = seq1;
-            row = seq2;
-        } else {
-            row = seq1;
-            col = seq2;
-        }
-
-        int x = 0;
-
+    private void initMatrix() {
         score = new double[row.sequence.length()][col.sequence.length()];
 
         for (int i = 0; i < row.sequence.length(); i++) {
@@ -508,9 +499,76 @@ public class UI extends javax.swing.JFrame {
             }
         }
 
+    }
+
+    private void preprocessProt(ArrayList<Sequence> seq) {
+        Sequence seq1 = seq.get(0);
+        Sequence seq2 = seq.get(1);
+
+        seq1.sequence = "-" + seq1.sequence;
+        seq2.sequence = "-" + seq2.sequence;
+        System.out.println(seq1.sequence);
+        System.out.println(seq2.sequence);
+        //longest sequence will be the col
+        if (seq1.sequence.length() > seq2.sequence.length()) {
+            col = seq1;
+            row = seq2;
+        } else {
+            col = seq2;
+            row = seq1;
+        }
+
+        double x = 0;
+        initMatrix();
+
+        //init tables based on scoring Matrix
+        if (matrix_cbo.getSelectedIndex() == 0) {
+            //PAM 120
+            for (int i = 0; i < col.sequence.length(); i++) {
+                x = i * scoringMatrix.get(col.sequence.charAt(i))[Proteins.indexOf('-')];
+//                x = i * scoringMatrix.get(col.sequence.charAt(i))[Proteins.indexOf(col.sequence.charAt(i))];
+                if (i < row.sequence.length()) {
+                    score[i][0] = x;
+                    Point tmp = getPoint(i, 0);
+                    tmp.setValue(x);
+                }
+                score[0][i] = x;
+                Point tmp = getPoint(0, i);
+                tmp.setValue(x);
+            }
+        }
+        Matrix test = new Matrix(score);
+        test.print(3, 5);
+        scoringProt();
+    }
+
+    private void scoringProt() {
+
+    }
+
+    private void preprocessNuc(ArrayList<Sequence> seq) throws IOException {
+        Sequence seq1 = seq.get(0);
+        Sequence seq2 = seq.get(1);
+
+        seq1.sequence = "-" + seq1.sequence;
+        seq2.sequence = "-" + seq2.sequence;
+
+        //longest sequence will be the col
+        if (seq1.sequence.length() > seq2.sequence.length()) {
+            col = seq1;
+            row = seq2;
+        } else {
+            col = seq2;
+            row = seq1;
+        }
+
+        int x = 0;
+
+        initMatrix();
+
         //initalization of tables
         for (int i = 1; i < col.sequence.length(); i++) {
-            x += Integer.parseInt(gap_tf.getText());
+            x = i * Integer.parseInt(gap_tf.getText());
             if (i < row.sequence.length()) {
                 score[i][0] = x;
                 Point tmp = getPoint(i, 0);
@@ -521,7 +579,7 @@ public class UI extends javax.swing.JFrame {
             Point tmp = getPoint(0, i);
             tmp.setValue(x);
         }
-        scoring();
+        scoringNuc();
 //        displayPoints();
         tracing();
 
@@ -546,28 +604,29 @@ public class UI extends javax.swing.JFrame {
         return tmp;
     }
 
-    private void scoring() {
+    private void scoringNuc() {
         int match = Integer.parseInt(match_tf.getText());
         int mismatch = Integer.parseInt(mismatch_tf.getText());
         int gap = Integer.parseInt(gap_tf.getText());
         char a, b = '-';
         int cellValue = 0;
 
-        for (int i = 1; i < row.sequence.length(); i++) {
+        for (int i = 1; i < col.sequence.length(); i++) {
             cellValue = 0;
             for (int j = 1; j < col.sequence.length(); j++) {
                 Point cur = getPoint(i, j);
 
 //                System.out.println(cur.getX() + " " + cur.getY());
-                a = col.sequence.charAt(j);
-                b = row.sequence.charAt(i);
-
+                a = row.sequence.charAt(j);
+                b = col.sequence.charAt(i);
+                System.out.println("");
+                System.out.println(a+" "+b);
                 if (a == b) {
                     cellValue = match;
                 } else {
                     cellValue = mismatch;
                 }
-
+                System.out.println(cellValue);
                 //diagonal
                 double diagValue = getDiagonal(i, j);
                 diagValue += cellValue;
@@ -577,6 +636,8 @@ public class UI extends javax.swing.JFrame {
 
                 //top
                 double topValue = getTop(i, j) + Integer.parseInt(gap_tf.getText());
+                
+                System.out.println(diagValue+" "+leftValue+" "+topValue);
                 double tmp = 0;
                 if (leftValue > topValue) {
                     if (leftValue > diagValue) {
@@ -614,13 +675,16 @@ public class UI extends javax.swing.JFrame {
                         cur.addOrigin(getPoint(i, j - 1));
                         tmp = leftValue;
                     }
-                }
+                }   
+                System.out.println(tmp);
 
                 score[i][j] = tmp;
                 cur.setValue(tmp);
 
             }
         }
+        Matrix t = new Matrix(score);
+        t.print(2, 3);
 
     }
 
@@ -663,15 +727,14 @@ public class UI extends javax.swing.JFrame {
                 System.out.print("Enter cell[j]: ");
                 j = scan.nextInt();
             }
-            if (i == 0 && j == 0) {
-                backtrack.add(getPoint(0, 0));
-                flag = true;
-            }
             if (flag) {
                 break;
             }
-        }
 
+            for (int k = 0; k < cur.getOrigins().size(); k++) {
+                System.out.println(cur.getOrigins().get(k).getValue());
+            }
+        }
         extractFile(backtrack);
     }
 
@@ -701,17 +764,6 @@ public class UI extends javax.swing.JFrame {
             }
 
             s--;
-        }
-
-        for (int i = 1; i < seq1.length(); i++) {
-            if (seq2.charAt(j) == seq1.charAt(i)) {
-                System.out.println(Integer.parseInt(match_tf.getText()));
-            } else if (seq2.charAt(j) == '-') {
-//                System.out.println(Integer.parseInt(gap_tf.getText()));
-            } else {
-//                System.out.println(Integer.parseInt(mismatch_tf.getText()));
-            }
-
         }
 
         int res = JOptionPane.showConfirmDialog(null, "Generate Report?", "Pop-Up Menu", JOptionPane.YES_NO_OPTION);
@@ -764,10 +816,6 @@ public class UI extends javax.swing.JFrame {
         }
     }
 
-    private void preprocessProt(ArrayList<Sequence> seq) {
-
-    }
-
     private void initScoringMatrixMap() {
         scoringMatrix.put('A', new double[]{3, -3, -1, 0, -3, -1, 0, 1, -3, -1, -3, -2, -2, -4, 1, 1, 1, -7, -4, 0, 0, -1, -1, -8});
         scoringMatrix.put('R', new double[]{-3, 6, -1, -3, -4, 1, -3, -4, 1, -2, -4, 2, -1, -5, -1, -1, -2, 1, -5, -3, -2, -1, -2, -8});
@@ -793,103 +841,9 @@ public class UI extends javax.swing.JFrame {
         scoringMatrix.put('Z', new double[]{-1, -1, 0, 3, -7, 4, 4, -2, 1, -3, -3, -1, -2, -6, -1, -1, -2, -7, -5, -3, 2, 4, -1, -8});
         scoringMatrix.put('X', new double[]{-1, -2, -1, -2, -4, -1, -1, -2, -2, -1, -2, -2, -2, -3, -2, -1, -1, -5, -3, -1, -1, -1, -2, -8});
         scoringMatrix.put('-', new double[]{-8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, 1});
-    }
-
-}
-
-class Sequence {
-
-    public String sequence;
-    public String title;
-
-    Sequence(String title, String sequence) {
-        this.title = title;
-        this.sequence = sequence.toUpperCase();
+        Proteins = "ARNDCQEGHILKMFPSTWYVBZX-";
 
     }
 
-    public String getID() {
-        try {
-            return this.title.split("\\|")[1];
-        } catch (Exception e) {
-            return this.title;
-        }
-    }
-}
-
-class Point {
-
-    private int x;
-    private int y;
-    private double value;
-    private ArrayList<Point> origins = new ArrayList<Point>();
-
-    Point(int x, int y, double value) {
-        this.x = x;
-        this.y = y;
-        this.value = value;
-
-    }
-
-    public void addOrigin(Point origin) {
-        getOrigins().add(origin);
-
-    }
-
-    /**
-     * @return the x
-     */
-    public int getX() {
-        return x;
-    }
-
-    /**
-     * @param x the x to set
-     */
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    /**
-     * @return the y
-     */
-    public int getY() {
-        return y;
-    }
-
-    /**
-     * @param y the y to set
-     */
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    /**
-     * @return the value
-     */
-    public double getValue() {
-        return value;
-    }
-
-    /**
-     * @param value the value to set
-     */
-    public void setValue(double value) {
-        this.value = value;
-    }
-
-    /**
-     * @return the origins
-     */
-    public ArrayList<Point> getOrigins() {
-        return origins;
-    }
-
-    /**
-     * @param origins the origins to set
-     */
-    public void setOrigins(ArrayList<Point> origins) {
-        this.origins = origins;
-    }
-
+    
 }
